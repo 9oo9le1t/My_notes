@@ -1,0 +1,9 @@
+Open file interminal
+Identify and Hash the File: Calculate the MD5, SHA-1, or SHA-256 hash of the document
+Check against threat intelligence databases to see if it is already identified as malicious.
+Inspect File Type and Metadata: Use tools like file or hex editors to verify the file extension matches the actual content (e.g., a .doc that is actually an .exe). 
+Check metadata for suspicious creation dates or author names.
+Extract Strings: Use strings utilities to scan for readable text, including IP addresses, URLs, domain names, or command-line arguments (e.g., powershell.exe, cmd.exe) that indicate downloader functionality.
+Analyze Macros and Scripts: For MS Office docs, use tools like oletools (e.g., olevba) to extract VBA macros. Look for AutoOpen, Document_Open, or suspicious shell commands.
+De-obfuscate Code: Analyze embedded scripts (VBScript, PowerShell, JavaScript) that are often obfuscated. Use static analysis tools to decode or de-obfuscate to reveal the final payload.
+Identify Suspicious Structure: Use tools to detect if the document uses OLE (Object Linking and Embedding) to load external malicious code or exploits, often indicated by abnormally structured containers. 
