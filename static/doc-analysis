@@ -1,5 +1,6 @@
 Open file location in terminal
 Identify and Hash the File: Calculate the MD5, SHA-1, or SHA-256 hash of the document
+MIME-type dont trust file type, check it 
 Check against threat intelligence databases to see if it is already identified as malicious.
 Inspect File Type and Metadata: Use tools like file or hex editors to verify the file extension matches the actual content (e.g., a .doc that is actually an .exe). 
 Check metadata for suspicious creation dates or author names.
