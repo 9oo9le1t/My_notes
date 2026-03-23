@@ -1,5 +1,6 @@
 md5sum filename.doc
 sha256sum filename.doc
+file filename.doc
 
   
 exiftool filename.doc
