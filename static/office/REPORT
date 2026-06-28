@@ -1,0 +1,38 @@
+EXPRESS DOCUMENT SAFETY VERDICT 
+REPORTCase ID: [Upwork Contract Number]
+Date of Analysis: [Current Date]T
+urnaround Time: [Time taken, e.g., 2 Hours]
+1. FINAL VERDICT: [MALICIOUS / SUSPICIOUS / SAFE]
+*A 1-sentence summary telling the client exactly what to do (e.g., "DO NOT OPEN. This file is an unsafe downloader disguised as an invoice.").
+   2. FILE IDENTIFICATION
+Filename: invoice_3920.docTrue 
+File Type (MIME): Composite Document File V2 (Microsoft Office Word)
+Digital Fingerprint (SHA256): a1b2c3d4e5f6...
+   3. KEY FINDINGS (Why I made this verdict)
+Disguise Check: Verified. The extension matches the internal file structure.
+Hidden Automation: [ALERT] Automated Visual Basic (VBA) macros detected inside the document structure (AutoOpen trigger found).
+Network Indicators: Found 2 hidden obfuscated web links inside the code pointing to unrecognized external domains (http://malicious-domain.com).
+   4. RECOMMENDED NEXT STEPS
+Immediately delete this file from all email inboxes.
+Inform your IT administrator to block the following domain on your network: [malicious-domain.com].
+
+
+
+Case ID: [Upwork Contract Number]
+Date of Analysis: [Current Date]
+Turnaround Time: [Time taken, e.g., 2 Hours]
+  1. FINAL VERDICT: [MALICIOUS / SUSPICIOUS / SAFE]
+*A 1-sentence summary telling the client exactly what to do (e.g., "DO NOT REPLY. This is a targeted Phishing attempt designed to steal your company login credentials.").
+   2. EMAIL OVERVIEW
+Displayed Sender: Accounts Payable <billing@trustedvendor.com>
+True Sender Address: attacker-mailbox@scamdomain.xyz
+Subject Line: URGENT: Outstanding Balance Invoice #8843
+Inbound Server IP: 192.0.2.13. 
+   3.KEY FINDINGS (Why I made this verdict)
+Sender Identity Spoofing: [ALERT] The email claims to come from your trusted vendor, but the underlying technical header reveals it originated from an unrelated, anonymous domain (scamdomain.xyz).
+Authentication Failures: Failed critical email safety checks (SPF / DKIM validation failed). The sender's server is not authorized to send mail on behalf of the real company.
+Hidden Destination Links: [ALERT] The text link labeled "Click Here to View Invoice" actually routes users to a hidden credential-harvesting page designed to look like a Microsoft 365 login screen.
+   4. RECOMMENDED NEXT STEPS
+Do not reply to the sender and do not click any links within the email text.
+Mark the email as "Phishing" or "Junk" inside your email client to train your local filters.
+Forward the following true sender address to your IT administrator to block company-wide: attacker-mailbox@scamdomain.xyz.
