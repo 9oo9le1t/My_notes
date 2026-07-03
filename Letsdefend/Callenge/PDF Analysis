@@ -51,4 +51,5 @@ cat javascript-from-sus.pdf
     The following command will create a script file for PeePDF to use:
 echo ‘extract js > javascript-from-sus.pdf’ > extracted_javascript.txt
     The script will extract all JavaScript via extract js and pipe '>' the contents into “javascript-from-sus.pdf”.
-    peepdf -f -s extracted_javascript.txt Update.pdf  -will tell PeePDF the name of the script (extracted_javascript.txt) and the PDF file that we want to extract from (Update.pdf)
+    peepdf -f -s extracted_javascript.txt Update.pdf  -will tell PeePDF the name of the script (extracted_javascript.txt)
+                                                       and the PDF file that we want to extract from (Update.pdf)
