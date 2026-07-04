@@ -7,3 +7,7 @@ Username: Susie
 Requested URL: https://www.win-rar.com/postdown.html?&L=0&Version=32bit
 User Agent: Chrome-Windows
 Device Action: Allowed
+
+Device Action is allowed so it still there on the endpoint even if I didn’t see any process running
+    check connection logs and found a connection log user 172.16.17.5 has downloaded files via win-rar from 51.195.68.163
+Analysis time, this time I used Virus Total, Hybrid analysis,s and Any Run 
