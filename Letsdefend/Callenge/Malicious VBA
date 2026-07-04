@@ -1,0 +1,11 @@
+One of the employees has received a suspicious document attached in the invoice email. 
+They sent you the file to investigate. You managed to extract some strings from the VBA Macro document. 
+Can you refer to CyberChef and decode the suspicious strings?
+
+Please, open the document in Notepad++ for security reasons unless you are running the file in an isolated sandbox.
+MD5 invoice.vb
+36545facf925ffa371fec7578993de79
+SHA-1
+5b3e6c6cbdd2e2e82da43a3fb312516d7ece2b2c
+SHA-256
+a9e02a6c316b3d7659b48621015d504820337f1f88dd588b75597db95750d16e 
