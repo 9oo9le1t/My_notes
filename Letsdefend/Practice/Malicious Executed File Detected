@@ -10,4 +10,11 @@ Device Action: Allowed
 
 Device Action is allowed so it still there on the endpoint even if I didn’t see any process running
     check connection logs and found a connection log user 172.16.17.5 has downloaded files via win-rar from 51.195.68.163
-Analysis time, this time I used Virus Total, Hybrid analysis,s and Any Run 
+Check Destination address: 51.195.68.163 and Requested URL: https://www.win-rar.com/postdown.html?&L=0&Version=32bit  
+with VirusTotal and hybrid analysis or anyrun
+        No issues here according to VirusTotal, hybrid and anyrun 
+
+Endpoint analysis shows no movement or further actions initiated by the file.
+
+I did not identify any threats or suspicious activity. 
+After opening the case and documenting the findings, I closed the alert as a False Positive
