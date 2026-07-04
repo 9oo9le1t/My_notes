@@ -10,3 +10,9 @@ SHA1sum invoice.vb
     5b3e6c6cbdd2e2e82da43a3fb312516d7ece2b2c
 SHA256sum invoice.vb
     a9e02a6c316b3d7659b48621015d504820337f1f88dd588b75597db95750d16e 
+oleid invoice.vb
+        shows the file contains VBA Macros
+olevba invoice.vb
+        result from the command shows the VBA code was obfuscated so let’s deobfuscate it with olevba
+olevba - deobf - reveal invoice.vb
+        output shows deobfuscated strings, containing answers
