@@ -1,0 +1,27 @@
+One of the employees has received a suspicious document attached in the email. When the e-mail flow is examined, it is 
+seen that there is a suspicious Office file. Employees forward the email to the security team for analysis.
+When L1 analysts scan the suspicious file with several different scanning tools, they see that it does not contain 
+VBA macros. Since the file format is similar to phishing, they forwarded the suspicious Office file to you for detailed 
+analysis.
+
+      Files:
+
+    Research-1646684671.xls
+    Iroto.dll
+    Iroto1.dll
+
+MD5sum Research-1646684671.xls
+927005139a0be61efe849c715d875dd2
+SHA1sum Research-1646684671.xls
+0f6a91916941d85b69e5320873a5d1c45055bc4e
+SHA256sum Research-1646684671.xls
+b23491ede17f9a5b7d6ad27d3051a2224c214a5afa2139e5147bd26319577f85 
+file Research-1646684671.xls
+xls
+
+
+oleid Research-1646684671.xls
+xlmdeobfuscator -file research-1646684671.xls
+
+An XLS file was using Excel 4.0 Macro to download malicous dlls and executed them, 
+It was set to execute when user open this file with macro turn off and even hide worksheets that have these formulas.
