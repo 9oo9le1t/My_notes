@@ -1,0 +1,194 @@
+Once you have Wireshark installed, this section will help you familiarise yourself with the GUI.
+
+The GUI can be categorized into 2 screens
+
+    Startup Window, which is displayed when Wireshark is launched.
+    Main Window, which is displayed when a capture has been started or loaded.
+
+You do not need to learn all of the settings and options, but knowing the major options will allow you to use Wireshark
+for network analysis with relative ease.
+
+    Wireshark Startup Window
+The Startup Window is the screen that pops up when the user starts Wireshark. It allows the user to start or load a
+network traffic capture and configure some capture settings.
+
+  [1] Start Capture: The blue button in the top left corner starts capturing inbound and outbound packets, with the 
+specified capture filters, on the specified interface.
+
+  [2] Open Saved Files: Wireshark traffic capture files can be saved in several formats, such as .cap, .pcap or .pcapng,
+and can be opened in the Main Window for analysis. 
+
+  [3] Capture Filter: You can write expressions in the capture filter to limit the types of packets that Wireshark 
+captures. For example, if you specify the not arp capture filter, Wireshark avoid capturing Address Resolution Protocol
+packets. Details on how to construct capture filters are described in the next section. Capture filters can be saved for
+reuse at a later time.
+ 
+  [4] Capture Interface Selection: Wireshark lists all available interfaces that it can capture on, with a graph of the 
+recent network activity on each of those interfaces. You can select an interface that you want to capture traffic on, 
+such as en0 for Wi-Fi traffic and vboxnet0 for virtual network traffic.
+
+ It is recommended that promiscuous mode be turned on for capturing interfaces. Promiscuous mode allows Wireshark to 
+capture packets that are received on an interface but not actually addressed to the host, for example, frames transmitted
+on a wireless network with different MAC addresses. This allows Wireshark to capture other hosts’ traffic and have a 
+broader picture of the network.The promiscuous mode can be managed by clicking on the cog-shaped button in the top menu 
+bar and toggling the setting for a specific interface or for all interfaces.
+
+    Wireshark Main Window
+
+The Main Window is where all of the capturing and analysis happens. There are dozens upon dozens of options, parameters,
+statistics and detailed information available on the traffic being captured. The user can view the network traffic, from 
+the individual bytes of a single packet, to a statistical overview of protocols within the capture.
+
+    [1] Menu Bar: The menu bar located at the top of the window is used to manage the capture. In the far left section,
+you can start, stop and restart the capture, and manage capture interface settings. In the next section, you can open, 
+save and close the capture file. The magnifying glass icon is used to find a specific packet using a display filter or 
+by a string or bytes within the packet.
+
+    [2] Display Filter: The display filter is used to display only specified packets. You can construct an expression 
+by specifying header fields and optionally, the values that they should match. Logical operators can also be used to 
+chain expressions. If a packet contains the specified header field, or if the header field has a value that is specified,
+the packet will be shown in the packet list – otherwise, it will not be shown. 
+For example, a display filter of 
+    
+        ip.src_host == 192.168.1.7 and tcp.port == 443 and ssl.record.version == 0x0303 
+
+The first statement matches packets with a source IP address of 192.168.1.7. 
+The second statement matches packets with a source or destination TCP port 443 (SSL/TLS). 
+The third statement matches packets that are using TLS version 1.2. 
+
+The three statements are conjoined by the ‘and’ logical operator, which means a packet must satisfy all three of 
+those statements for them to be displayed in the packet list.
+
+
+    [3] Panes: The Wireshark Main Window has three main panes: packet list, packet headers and the hex dump and ASCII
+representation of the packet bytes. 
+
+    [4] Packet List: The packet list aggregates major information on the packets that Wireshark captures, in columns. 
+Generally, the packet list should display the packet number (the later the packet was captured, the higher this number is),
+time since the start of capture, the source and destination IP addresses, the protocol, the packet length and a summary of
+the packet headers or contents. You can easily get a picture of the network flow and protocol conversations being captured.
+
+    [5] Packet Headers: The packet headers section provides a wealth of information on each individual packet, and 
+organises packet header fields and values in layers of easy-to-view drop-down menus – from Layer 2 frame information to 
+Layer 7 protocol contents.
+ – Hex Dump & ASCII: On the bottom pane, you can see the hexadecimal and ASCII representation of the entire packet.
+
+Hovering over the hex dump or ASCII highlights a section of the packet and displays what field of the packet is being 
+highlighted on the bottom bar. You may also notice that the expression for the field is also displayed – in this case, 
+tcp.seq. This is especially helpful when you are constructing display filters and do not know the specific Wireshark term
+for specifying a certain packet field.
+
+Once you feel that you have captured a sufficient number of packets, you can pause the capture by clicking on the red 
+square icon in the menu bar, and choose to save or export the capture. Note that you must have paused the capture to save 
+it to a file.Saving the entire capture to a file is very simple. You can click on the 6th icon from the left in the menu 
+bar, which will open a popup and you can choose where to save the capture file, the file name and the file extension 
+(such as .pcapng or .pcap).
+ 
+Instead of saving the entire capture to a file, you can choose to export specific portions of the capture. This is useful
+if you want to only save the output of a display filter or if you want to analyse only a specific set of protocol 
+conversations. To do this, 
+    
+    apply a display filter of your preference, 
+    then click File > Export Specified Packets. 
+    Select the All packets and Displayed options, 
+
+You will be able to see the number of packets that have matched the display filter – for example
+    112 TCP packets had a PSH flag and had a source/destination port of 59303
+Clicking on Save should export only the specified packets to a separate capture file. Additionally, you may also specify 
+the range of the packet numbers to export – this is handy if you only want to save the first x number of packets.
+
+    Applying a Display Filter
+
+This significantly improves the ease of traffic analysis, as important traffic can be separated from the general noise 
+in the network. To filter by the presence of a protocol or header field in a packet, the expression should specify only
+the protocol or header field, e.g.
+
+    udp to display only UDP packets, and
+    http.request to display only HTTP requests
+
+To filter by the values of header fields, you can specify the header field, then a comparison operator, and then the value
+that it should match. For example, 
+    tcp.port == 80 
+displays packets that have a source or destination port of 80 (HTTP), 
+    tcp.window_size_value >= 8000 
+displays TCP packets with a window size of 8000 bytes or over. 
+
+Multiple filter statements can be chained by using logical operators, including and (&&) and (or/||). For example,
+    ip.dst_host == 192.168.1.7 && tcp
+to display TCP packets addressed to 192.168.1.7
+    ntp or udp.port == 20000
+to display either NTP traffic or UDP traffic from/to port 20000
+
+The not (!) operator excludes specific packets from being displayed, such as not ftp to exclude FTP packets from 
+being displayed in the packet list. Finally, brackets can be used to group statements together.
+
+    Following Streams & Custom Columns
+Imagine you want to analyse an HTTP communication between a web server and a host. You are interested in having a 
+holistic view of the dozens of HTTP requests and responses. In this case, looking at each individual packet will not 
+be of much profit to us – this is where Wireshark’s protocol stream following feature shines. 
+To follow a stream, 
+    right click on a packet within the stream
+    click Follow > TCP/UDP/SSL/HTTP Stream. 
+Inapplicable streams should be greyed out in the pop-up menu. Wireshark should automatically apply a display filter for
+the stream and open a new window displaying the contents of the packets in the stream. HTTP requests should be 
+highlighted in red and HTTP responses in blue.
+In addition to following streams, you can view specific packet information in the packet list by customizing the columns
+in the packet list. 
+To add a packet header value as a column, 
+    right click the header field 
+    select Apply as Column 
+The benefit of adding certain header values as a column is the ability for a quick visual identification of packets
+having a specific value that we are interested in.
+
+Wireshark collects different statistics about the traffic in the capture file – such as the percentage proportions of 
+protocols, the amount of bytes transmitted to different hosts, the IP addresses of all the hosts that has appeared in 
+the capture. They are helpful in certain scenarios, such as finding potential exfiltration vectors and identifying the 
+exfiltrating host based on network usage.
+
+This section will discuss three of the statistics windows:
+
+    Protocol Hierarchy
+    Conversations,
+    Endpoints
+
+    Protocol Hierarchy
+The Protocol Hierarchy window displays the percentages of the number of packets or bytes in a protocol conversation
+against the entire traffic. The protocols are organised in layers from Layer 2 to Layer 7, for example
+
+    99.7% of the traffic captured were IPv4 packets
+    96.6% being TCP, and
+    46.3% being SSL
+    It also shows that there were 2167 SSL packets, totaling around 177 KB.
+
+To check specific protocol traffic in the packet list 
+      right-click on a protocol
+      select Apply as Filter > Selected/Not Selected 
+to have Wireshark automatically create and apply a display filter showing/excluding the specified protocol traffic.
+
+The Protocol Hierarchy window can also identify data exfiltration through unusual or unused protocols. If you notice a 
+very small portion of FTP traffic in a large network that doesn’t use FTP, it might be worth it to check out the FTP 
+traffic and make sure the traffic is legitimate. Quite a few of network analysis challenges in CTFs dealing with data
+exfiltration can be solved by identifying unusual protocols from the Protocol Hierarchy window.
+
+    Conversations
+The Conversations window also provides a wealth of information on the traffic, including which hosts communicated which 
+hosts, on which ports, and with a total of how many bytes and packets in the conversation. This window is great for
+identifying the different MAC or IP addresses that a host has communicated with, and the volume of traffic between them.
+
+Similarly to the Protocol Hierarchy window, the Conversations window can be very helpful in investigating data 
+exfiltration attempts, as it can identify the attacker by IP address. If a host has been transmitting many packets and 
+bytes to an unidentified IP address without receiving many packets in return, an exfiltration could have been occurring.
+
+    Endpoints
+Endpoints window shows all of the different hosts that appear in the capture and the amount of packets/bytes they sent 
+and received. This window is useful in sorting hosts by their network activity, by either transmission or receiving 
+volume, or by both. 
+
+If a host has been receiving much more traffic than they have been transmitting, the host is probably downloading a 
+large file. On the other hand, if the host has been transmitting more than they have been receiving, the host is probably
+uploading files or backing up to remote storage, such as the cloud. 
+You can switch to other protocols, such as TCP to have traffic sorted by ports and Ethernet to have traffic sorted
+by MAC addresses. Same with all other statistics windows, you can right-click on a host to apply it as a filter.
+   
+
+
