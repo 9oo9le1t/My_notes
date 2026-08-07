@@ -1,0 +1,83 @@
+TCPDump is a command-line tool that, like Wireshark, can be used to capture network traffic and view and analyze PCAP
+capture files. Additionally, in some ways, TCPDump provides even more granular analysis and filtering capabilities, with 
+the ability to have the output piped to other commands.
+ You can see the available options with "tcpdump -h", or read the manual with "man tcpdump".
+
+To start a capture with default settings, simply type the command tcpdump.
+To view the list of available interfaces that TCPDump can capture traffic on, use tcpdump -D. 
+To start capturing on a specific interface, use tcpdump -i interface, e.g. tcpdump -i en0
+
+You can also apply filters by using command-line options.
+
+To filter by source or destination host, use tcpdump src ip-address or tcpdump dst ip-address. 
+To filter by port, add the port parameter and the port number, such as tcpdump dst port 25. 
+To filter by protocol, add the protocol name, such as tcpdump ftp. 
+Also, just like Wireshark, logical operators such as and & or can be used to chain terms. 
+Lastly, to make TCPDump quit after capturing x number of packets, use the -c no. option.
+
+Sometimes, having addresses and ports resolved to names can be annoying if you are processing the capture file through
+a script or a series of commands – to turn this off, use the -n option. Finally, you can save your capture to a PCAP 
+file with -w filename.
+
+To read a saved capture file with default settings, use tcpdump -r filename. 
+For a more verbose output, the -v, -vv or -vvv options can be used, with each one increasing in verbosity. 
+
+In the first line of each TCP packet, IP header information is displayed, including the TTL, flags, Layer 4 protocol,
+length, and fragmentation offset. 
+
+In the second line of each TCP packet, you can see the source IP address and port (may have been resolved to a name), 
+the destination IP address and port, the TCP flag (S = SYN, P = PSH, F = FIN, R = RST, U = URG and A for = ACK), 
+checksum, sequence and acknowledgement numbers, window size, any options and header length. 
+
+You can also apply filters specifying particular fields and values in the packet header. Some of the most useful ones 
+include
+    Specifying TCP flags:
+To match all packets with a single specified TCP flag, add the 
+tcp[tcpflags] == tcp-ack/tcp-syn/tcp-fin/tcp-push/tcp-urg/tcp-rst option. 
+For example, tcp[tcpflags] == tcp-pushdisplays packets with only the PSH flag set.
+
+In order to match packets with multiple TCP flags, you must first calculate the decimal value of the flag section of 
+the TCP header. 
+
+Flag Decimal Values
+FIN (Finish): 1 (bit 0)
+SYN (Synchronize): 2 (bit 1)
+RST (Reset): 4 (bit 2)
+PSH (Push): 8 (bit 3)
+ACK (Acknowledgment): 16 (bit 4)
+URG (Urgent): 32 (bit 5)
+ECE (ECN-Echo): 64 (bit 6)
+CWR (Congestion Window Reduced): 128 (bit 7)
+
+Common Combined Examples
+SYN + ACK: 2 + 16 = 18
+FIN + ACK: 1 + 16 = 17
+RST + ACK: 4 + 16 = 20
+
+– Specifying packet header bytes:
+You can specify any byte in the packet header by using its index. For example, let’s suppose that we want to display 
+only ICMP Echo Request packets. We know that echo requests have an ICMP type of 8. Since the type field in an ICMP header
+is the first byte, byte 0 (index is counted from 0) of the ICMP header should have a value of 8 (or 00001000 in binary).
+From this, we can construct our expression as 
+    icmp[0] == 8. 
+The same applies for other protocol headers and values, such as ip[8] for the TTL.
+
+Note that you can sometimes replace the byte index with the name of the field that you are specifying. For example, 
+icmp[0] could be replaced with icmp[icmptype]. 
+
+There are many other useful features in TCPDump, such as:
+
+    -A to display packet contents in ASCII
+    -x to print the hex dump of the packet
+    -X to print both of the above, and
+    -t, -tt, -ttt, -tttt, -ttttt to manage timestamps
+
+You should explore more options as you get more and more familiar with TCPDump. 
+As TCPDump is a command-line, text-based tool unlike Wireshark, it also opens up the possibility to pipe the output to 
+other shell commands and scripts for additional filtering, statistics calculation etc.. How useful this ability is 
+largely depends on your familiarity with certain shell commands. Below are some commands which can manipulate TCPDump 
+output for additional filtering.
+
+    – cut -d “delimiter” -f no.: 
+cut is a useful tool that can extract certain fields within each line with the use of delimiters. Delimiters are single 
+characters that separate each field, with each field being able to be specified with a number.
