@@ -23,5 +23,18 @@ xls
 oleid Research-1646684671.xls
 xlmdeobfuscator -file research-1646684671.xls
 
-An XLS file was using Excel 4.0 Macro to download malicous dlls and executed them, 
-It was set to execute when user open this file with macro turn off and even hide worksheets that have these formulas.
+🎯 Attack Logic (The Hacker's Trick)
+
+The Blueprint: The attacker crafts a malicious XLS document that contains no standard VBA macros, allowing it to bypass
+modern security configurations and traditional antivirus solutions that strictly scan for VBA code.
+
+The Mechanism: Instead of VBA, the file leverages ancient Excel 4.0 Macros (XLM). The script is configured to trigger 
+automatically upon opening, silently download a malicious payload (Iroto.dll), execute it in the background, and hide 
+the worksheets containing the formula logic from the user's view.
+
+🕵️‍♂️ Investigation Process (How to Spot It)
+File Validation: Verify the file type, structure, and known reputation across global threat intelligence databases.
+Structural Inspection: Analyze the Object Linking and Embedding (OLE) structure to detect ancient macro sheets or
+automated execution flags.
+Deobfuscation & Extract: Uncover hidden or heavily obscured cells and worksheets to extract the hidden execution 
+formulas and command-and-control (C2) domains.
