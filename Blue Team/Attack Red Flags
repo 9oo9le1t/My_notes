@@ -1,0 +1,133 @@
+    1. Port Scanning (SYN Scanning / Reconnaissance)
+
+Theory: An attacker sends mass SYN packets to various ports on a target host to discover active services and 
+vulnerabilities.
+Network Marker: A massive flood of SYN packets from a single external IP to many different destination ports, 
+resulting in either RST-ACK (port closed) or no response (timeout).
+
+tcpdump Command:
+tcpdump -nn -r traffic.pcap "tcp[tcpflags] & tcp-syn != 0" | awk '{print $3, $5}' | sort | uniq -c | sort -nr | head -n 10
+
+Wireshark Filter:
+tcp.flags.syn == 1 && tcp.flags.ack == 0
+
+    2. DNS Tunneling & C2 Traffic
+
+Theory: Attackers bypass firewalls by encoding stolen data or malware commands inside standard DNS queries sent to a
+rogue authoritative name server.
+Network Marker: A massive spike in UDP 53 requests to a specific domain, where the subdomains are unusually long,
+high-entropy strings of random characters (e.g., ://malicious.com).
+
+tcpdump Command:
+tcpdump -nn -r traffic.pcap udp port 53 -A | grep -E -o "[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" | sort | uniq -c | sort -nr | head -n 10
+
+Wireshark Filter:
+dns.flags.response == 0 && dns.qry.name.len > 30
+
+    3. Command & Control Beaconing (C2 Beaconing)
+
+Theory: Infected hosts (bots/trojans) check in with the attacker's server to receive new instructions at strict,
+automated intervals.
+Network Marker: Perfect mathematical periodicity in the packet timestamps 
+(e.g., traffic leaves exactly every 60 seconds or every 5 minutes). Humans do not generate traffic with 
+clockwork precision.
+
+tcpdump Command: (Filters traffic to a specific suspicious IP to check timestamp patterns manually)
+tcpdump -nn -r traffic.pcap host [suspicious_ip] | awk '{print $1}' | head -n 20
+
+Wireshark Filter: (Isolates a single conversation to analyze the "Time delta from previous displayed packet" column)
+ip.addr == [suspicious_ip] && tcp.flags.syn == 1
+
+    4. Data Exfiltration (Abnormal Outbound Data)
+
+Theory: An attacker has compromised a database or file system and is transferring massive amounts of sensitive data 
+out of the network.
+Network Marker: Web and DB traffic are normally highly asymmetrical—requests are small, responses are large. During
+exfiltration, the internal host transmits significantly more data than it receives (Data Out > Data In).
+
+tcpdump Command: (Finds packets with a payload size larger than 1000 bytes leaving your network)
+tcpdump -nn -r traffic.pcap -v "src net 192.168.1.0/24 and not dst net 192.168.1.0/24" | grep -E "length [1-9][0-9]{3,}" | head -n 10
+
+Wireshark Filter:
+ip.src == 192.168.1.0/24 && !ip.dst == 192.168.1.0/24 && tcp.len > 1000
+
+    5. SYN Flood (DDoS Attack)
+
+Theory: An attacker attempts to crash a server by flooding it with spoofed (fake) TCP connection requests, overwhelming
+the server's connection queue.
+Network Marker: Thousands of inbound SYN packets per second. The server responds with SYN-ACK, but the final ACK from 
+the client never arrives, leaving the sockets stuck in the SYN_RECV state.
+
+tcpdump Command: (Counts total SYN packets in the file to gauge the scale of the flood)
+tcpdump -nn -r traffic.pcap "tcp[tcpflags] & (tcp-syn) != 0" | wc -l
+
+Wireshark Filter:
+tcp.flags.syn == 1 && tcp.flags.ack == 0
+``` *(Tip: Go to Statistics -> Conversations -> TCP to look for thousands of incomplete sessions).*
+
+    6. Cleartext Administrative Protocols
+
+Theory: Legitimate admins or attackers use obsolete, unencrypted protocols, allowing anyone on the path to sniff 
+credentials or inject commands.
+Network Marker: Traffic active on ports 21 (FTP), 23 (Telnet), or 80 (HTTP).
+
+tcpdump Command: (Reads the packet payloads in ASCII format directly on the screen to look for passwords)
+tcpdump -nn -A -r traffic.pcap port 23 or port 21
+tcpdump -nn -A -r traffic.pcap "portrange 21-23 or port 80"
+tcpdump -nn -A -r traffic.pcap port 80 | grep -iE "password|pwd|login|user|post"
+
+
+Wireshark Filter:
+telnet || ftp || http
+``` *(Tip: Right-click a packet and choose "Follow -> TCP Stream" to read the conversation).*
+
+    7. ARP Spoofing (Man-in-the-Middle / MitM)
+Theory: An attacker in the local network broadcasts fraudulent ARP messages to associate their MAC address with the
+IP address of the default gateway (router) or a target victim.
+Network Marker: A sudden surge of unsolicited ARP replies. You will see one physical MAC address claiming ownership 
+over multiple different IP addresses in the network log.
+
+tcpdump Command:
+tcpdump -nn -r traffic.pcap arp
+
+Wireshark Filter:
+arp.duplicate-address-detected || arp.opcode == 2
+
+    8. Authentication Brute-Forcing
+Theory: Automated tools repeatedly attempt to guess passwords on exposed services like SSH (22), RDP (3389), or web 
+login portals.
+Network Marker: Hundreds or thousands of TCP connections opened and torn down within seconds between the same two IPs. 
+The sessions terminate abruptly after the server sends an authentication failure response.
+
+tcpdump Command: (Counts connection attempts to the SSH port grouped by source IP)
+tcpdump -nn -r traffic.pcap dst port 22 and "tcp[tcpflags] & tcp-syn != 0" | awk '{print $3}' | sort | uniq -c | sort -nr
+
+Wireshark Filter:
+tcp.dstport == 22 && tcp.flags.syn == 1
+
+    9. Web Directory Busting (Web Reconnaissance)
+Theory: Attackers use automated fuzzers (e.g., Dirbuster, Gobuster) to brute-force URLs looking for hidden admin
+panels, backups, or unlinked directories.
+Network Marker: An intense stream of HTTP GET requests to highly varied paths (/admin, /backup.sql, /secret/), 
+resulting in a massive volume of server responses showing 404 Not Found or 403 Forbidden.
+
+tcpdump Command: (Searches for HTTP 404 response strings inside web traffic)
+tcpdump -nn -A -r traffic.pcap tcp port 80 | grep "HTTP/1.1 404" -B 2 -A 5
+
+Wireshark Filter:
+http.response.code == 404 || http.response.code == 403
+
+    10. Abnormal or Malformed TCP Flags (Evasion Scans)
+Theory: Attackers craft packets with combinations of TCP flags that violate official network standards (RFCs) in an
+attempt to bypass primitive firewall logic or fingerprint the OS.
+Network Marker: Packets containing nonsensical flag combinations like Xmas (FIN+PSH+URG set simultaneously)
+or Null (all flags set to 0).
+
+tcpdump Command: (Finds Null scans where the TCP flag byte equals 0)
+tcpdump -nn -r traffic.pcap "tcp[tcpflags] == 0"
+
+Wireshark Filter:
+tcp.flags == 0x000
+
+
+
