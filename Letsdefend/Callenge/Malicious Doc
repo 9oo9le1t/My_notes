@@ -1,3 +1,26 @@
+🎯 Attack Logic (The Hacker's Trick)
+The Blueprint: The attacker delivers a weaponized Microsoft Office document via a phishing email. The goal 
+is to bypass automated sandbox detection and static antivirus engines by avoiding compiled malicious binaries.
+Instead, the document contains nested macro components or active scripts that act as a downloader (Dropper).
+
+The Mechanism: Upon activation (either via social engineering convincing the user to enable content or via 
+automated execution strings), the document triggers hidden execution strings. These strings instantiate 
+native Windows system utilities (such as cmd.exe or powershell.exe) to covertly establish an outbound connection,
+download a secondary stage payload (often an encoded .dll or executable), and run it in the background.
+
+Evasion Technique: The attack relies heavily on LOLBAS (Living off the Land Binaries and Scripts). 
+By using trusted, digitally signed Microsoft binaries to fetch the payload, the hacker flies under the radar 
+of primitive firewall alerts.
+
+🕵️‍♂️ Investigation Process (How to Spot It)
+Initial Triage: Extract basic file metrics (size, extension, and hashes) to query global threat intelligence 
+databases (e.g., VirusTotal).
+Macro & OLE Enumeration: Run quick automated scanners to detect embedded VBA, XLM, or hidden configuration layers.
+Code Deobfuscation: Locate and extract the obfuscated code or execution strings hidden within the macro modules 
+or document streams.
+Network IOC Extraction: Isolate the target URLs, domains, or IP addresses that the malicious document attempts 
+to contact to fetch the second-stage malware.
+
 md5sum factura.doc
     05c137d8e79ce59ed6e4b7cd78e5b8a2
 sha256sum factura.doc
