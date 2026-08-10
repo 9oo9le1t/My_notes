@@ -1,3 +1,27 @@
+🎯 Attack Logic (The Hacker's Trick)
+The Blueprint: The attacker sends a financial-themed phishing email (e.g., an invoice) with a weaponized 
+document attached. The document contains an embedded Visual Basic for Applications (VBA) macro design to act 
+as a stealthy stager or downloader.
+
+The Mechanism: To prevent security analysts and automated sandboxes from reading the script's true intent, 
+the attacker uses string obfuscation techniques (such as string splitting, character arrays, custom XOR, or 
+Base64 encoding). When the victim opens the file and allows macros, the script deobfuscates itself in memory, 
+reconstructs the malicious commands, and executes them.
+
+Evasion Technique: By ensuring that critical strings (like URLs, file paths, or Windows API functions) do not
+appear in cleartext inside the file, the hacker successfully evades static antivirus scanners and traditional 
+strings command lookups.
+
+🕵️‍♂️ Investigation Process (How to Spot It)
+Safe Triage: Isolate the sample and audit raw text components inside a secure text editor (like Notepad++) or
+a dedicated malware analysis sandbox to prevent accidental execution.
+Structural Assessment: Run automated OLE audit tools to confirm the presence of concealed VBA macro storage 
+streams.
+Emulated Deobfuscation: Leverage advanced static analysis engines to simulate code execution, automatically
+parsing and uncovering obfuscated layers.
+Cryptographic Decoding: Extract the remaining obscured payloads and pass them through processing engines 
+(like CyberChef) to reconstruct the final command-and-control (C2) indicators.
+
 One of the employees has received a suspicious document attached in the invoice email. 
 They sent you the file to investigate. You managed to extract some strings from the VBA Macro document. 
 Can you refer to CyberChef and decode the suspicious strings?
