@@ -1,3 +1,32 @@
+🎯 Attack Logic (The Hacker's Trick)
+The Blueprint: The attacker delivers a weaponized PDF masquerading as a critical system update (Update.pdf)
+via a targeted phishing email. The document contains no visible exploits or standard macros, rendering 
+signature-based scanners ineffective.
+
+The Mechanism: The attack exploits structural features of the PDF format, specifically embedding elements
+like /OpenAction and /Launch. The moment the victim opens the document, these objects automatically trigger 
+a chain reaction: executing highly obfuscated JavaScript and initiating native Windows PowerShell processes
+in the background.
+
+Evasion Technique: The payload utilizes multi-layered obfuscation to confuse static analysis tools:
+JavaScript Layer: Enclosed in a heavily obfuscated structure running through the dangerous dynamic eval() 
+function to hide its execution path.
+PowerShell Layer: Hardcoded inside a raw object stream utilizing a combination of Base64 encoding and string 
+reversal (Backward text) to break standard keyword detection.
+
+Persistence Mechanism: The script binds multiple commands together into persistent variables (LoadCode) 
+to establish a continuous connection to the attacker's server.
+
+🕵️‍♂️ Investigation Process (How to Spot It)
+Structural Assessment: Run specialized PDF indexers to identify risky object flags (/OpenAction, /Launch, /JS).
+Object Cross-Referencing: Map specific object IDs to isolate structural payloads and view their raw data streams.
+Deobfuscation & String Reversal: Extract encoded streams, decode them from Base64, and reverse the text order 
+to read the underlying code.
+Safe Dynamic Execution: Safe-test scripts by replacing active execution commands 
+(like PowerShell's Invoke-Expression or JavaScript's eval()) with benign output strings (Write-Output/variables)
+within sandboxed environments (Tio.run, W3Schools Tryit Editor) to extract cleartext Indicators of Compromise 
+(IOCs).
+
 Challenge Scenarios:
 An employee has received a suspicious email:
     From: SystemsUpdate@letsdefend.io To: Paul@letsdefend.io
@@ -51,5 +80,6 @@ cat javascript-from-sus.pdf
     The following command will create a script file for PeePDF to use:
 echo ‘extract js > javascript-from-sus.pdf’ > extracted_javascript.txt
     The script will extract all JavaScript via extract js and pipe '>' the contents into “javascript-from-sus.pdf”.
-    peepdf -f -s extracted_javascript.txt Update.pdf  -will tell PeePDF the name of the script (extracted_javascript.txt)
+    peepdf -f -s extracted_javascript.txt Update.pdf  -will tell PeePDF the name of the script 
+                                                                                  (extracted_javascript.txt)
                                                        and the PDF file that we want to extract from (Update.pdf)
