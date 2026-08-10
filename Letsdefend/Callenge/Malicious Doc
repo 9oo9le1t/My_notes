@@ -21,6 +21,9 @@ or document streams.
 Network IOC Extraction: Isolate the target URLs, domains, or IP addresses that the malicious document attempts 
 to contact to fetch the second-stage malware.
 
+Extracting hidden strings and decoding them (if Base64 or obfuscated)
+strings malicious_doc.doc | grep -iE "http|https|powershell|cmd"
+
 md5sum factura.doc
     05c137d8e79ce59ed6e4b7cd78e5b8a2
 sha256sum factura.doc
