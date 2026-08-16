@@ -1,0 +1,68 @@
+Digital forensics, also known as computer forensics, is a specialized field within the realm of forensic science 
+that deals with the investigation, preservation, analysis, and presentation of digital evidence. that will be
+used in an investigation.
+
+The primary goal is to establish the authenticity and integrity of the evidence, enabling it to be admissible in
+court and, ultimately, to assist in solving cybercrimes, intellectual property theft, fraud, and other
+digital-related offences. As technology evolves, digital forensics remains crucial in ensuring the integrity of 
+digital evidence and upholding justice in the digital age.
+
+Digital Forensics from a Security Operations perspective is often associated with monitoring of employees to 
+maintain a high-security posture, aiding with incident response to reveal details of how a compromise occurred 
+and any post-actions (known as DFIR or Digital Forensics and Incident Response)
+
+When looking at the different types of Digital Forensics, we have 4 that would likely be used in a cybersecurity
+operations environment:
+
+    Computer Forensics – Identifying, collecting, and preserving evidence taken from desktops, laptops, and 
+other computer systems and storage media to aid investigations or legal proceedings.
+
+    Network Forensics – The monitoring, collection, and analysis of network activities such as visited websites 
+and connected IPs, usually associated with incident response and intrusion detection.
+
+    Memory Forensics – The process of recovering evidence from the RAM of a running system 
+(also known as live acquisition or live response).
+  
+    Mobile Forensics – The process of recovering evidence from mobile phones, SIM cards, PDAs, tablets,
+and other mobile devices.
+
+    Associated Roles
+
+  Tier 1 SOC Analyst
+T1 Analysts will generally conduct initial investigations, mainly first-line incident response, and collect 
+evidence that will be added to an investigation case. This evidence is then used as justification for taking 
+defensive measures, such as blocking an IP, domain, or email sender. Here, an analyst will need to understand 
+that these artefacts (IPs, emails, domains) are considered evidence for the investigation. 
+
+  Tier 2/3 SOC Analyst
+T2/T3 Analysts will typically handle escalated/more critical investigations that require more technical expertise
+or access to additional tools or sensors. Due to the nature of critical and higher-priority investigations, the 
+related evidence is likely to be collected and handled under stricter conditions.
+
+  Malware Analyst
+Within the security operations domain, Digital Forensics can also be used as a term to refer to the process of
+malware analysis. Taking a sample of malware and using different techniques to discover what its purpose is, and
+how to detect it in the future by gathering IOCs.
+
+  Digital Forensics Analyst
+Digital Forensics Analysts will work on high-profile investigations, escalated cases, employee monitoring, 
+working with the Security Incident Response Team (SIRT), and other tasks that require trusted and highly 
+technical individuals. 
+ 
+  Insider Threat Analyst
+Security professionals who focus on detecting and monitoring trusted individuals (such as employees and 
+contractors) referred to as “insider threats”, will utilize their extensive digital forensics skills to ensure 
+that no stone is left unturned and that any evidence against an individual is collected appropriately.
+
+  Threat Hunter
+Threat Hunters are expert technical defenders who have a deep understanding of both offensive and defensive 
+practices. To be able to effectively hunt these individuals need to truly understand how computers and networks
+work and also understand key artefacts that can be found and used as evidence of an intrusion.
+
+  Incident Responder
+Incident responders are top-tier security analysts who typically poses skills across a wide range of blue-team 
+disciplines, forensics being one of them. This allows them to conduct deeper more in-depth investigations in
+order to understand how the system was compromised and the behaviour of the device. 
+An Incident Responder sometimes works closely with Forensic Examiners, especially on tasks such as retrieving
+data from physical media such as laptops and phones and using specialist tools to process and analyse the data 
+to find indicators of malicious activity.
