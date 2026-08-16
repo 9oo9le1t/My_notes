@@ -1,0 +1,49 @@
+Alexis is a fictional cybersecurity company with thousands of employees. An attacker has gained unauthorized 
+entry into its premises and has connected their laptop to an unused port on a switch. The attacker now has 
+access to the company’s internal networks. Within the internal network, there is a central server where critical 
+proprietary data is stored. In this capture, the attacker is attempting to collect SSH credentials that they can
+use to log into the central server.
+
+
+
+1. What is the MAC address of the attacker?
+
+Filtered SSH Packets:
+    Applied ssh filter in Wireshark to narrow down packets
+Conversations Analysis:
+    Examined Statistics > Conversations, revealing only two devices communicating via SSH.
+Packet Inspection:
+    Reviewed packet 765 on the main screen, focusing on Ethernet details.
+Answer is:  08:00:27:3d:27:5d
+
+2. What is the type of attack which is taking place that allows the attacker to listen in on conversations 
+between the central server and another host?
+
+google search will find the answer is Man-in-the-Middle
+
+3. What is the file which was downloaded from the central server?
+
+Protocol Overview:
+    Navigated to Statistics > Protocol Hierarchy in Wireshark to analyze all protocols in the PCAP file.
+    Identified FTP traffic under the TCP protocol.
+
+FTP Packet Inspection:
+    Returned to the main screen and applied an FTP filter using ftp in the display filter.
+    Selected packet 550 and followed the TCP stream.
+Answer is:  Alevis_Employee_Information_Chart.csv
+
+4. What department does Borden Danilevich work in?
+
+Filter FTP Traffic:
+    Applied the FTP filter ftp.request.arg contains "Alevis_Employee_Information_Chart"
+Revealed the contents of the CSV file within the TCP stream:
+    Follow -> TCP Stream
+Department Search:
+    Conducted a search within the CSV file for the keyword "Borden" to identify his department information.
+Answer is:  Sales
+
+5. What is the SSH password of the Domain Administrator?
+
+Admin Search:
+    Conducted a search within the CSV file for the keyword "Admin" to identify the SSH password.
+Answer is: gMR<4eXf]e6W
