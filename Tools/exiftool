@@ -1,0 +1,46 @@
+exiftool is the absolute gold standard in digital forensics, OSINT (Open Source Intelligence), and incident response for
+analyzing images, audio, video, and PDF files.
+
+Unlike basic file property viewers, exiftool can read thousands of different metadata tags, including EXIF, IPTC, XMP,
+GPS, and manufacturer-specific "MakerNotes" (from camera brands like Canon, Nikon, Sony).In a digital investigation, 
+it is crucial because metadata acts as a digital fingerprint, often revealing things the suspect thought they had 
+deleted or hidden.
+
+Key Forensic Data exiftool Can Extract
+
+Geolocation Data (GPS): Extracts exact latitude and longitude coordinates embedded by smartphones or cameras. This allows 
+investigators to pin down the physical location where a photo was taken.
+
+Camera & Device Details: Identifies the specific phone model, camera body, lens serial number, and software version used
+to create or edit the file.
+
+Timestamps & Execution History: Shows creation dates, modification dates, and sometimes even the local timezone. This is
+essential for building a chronological timeline of events.Software Artifacts: Reveals if an image was manipulated in 
+Photoshop or GIMP, as editing software always leaves trace metadata or software tags behind.
+
+Practical exiftool Cheat Sheet :
+
+1. Read All Metadata (The Baseline Test)To view every piece of metadata hidden inside a file:
+    
+        exiftool suspicious_image.jpg
+
+2. Extract Specific Tags (e.g., GPS and Time)If a file has too much data and you only want to see when it was taken and
+where:      
+
+        exiftool -DateTimeOriginal -GPSPosition photo.jpg
+
+3. Extract GPS Coordinates as a Google Maps LinkYou can format the output directly into a URL to instantly see the
+location on a map:
+
+        exiftool -c "%.6f" -p "https://google.com\$gpslatitude,\$gpslongitude" photo.jpg
+
+4. Extract Hidden Preview Images or ThumbnailsCameras and smartphones often embed a smaller "thumbnail" image inside the 
+metadata of the main file. Even if a suspect crops out a face or a piece of evidence from the main photo, the hidden 
+thumbnail might still show the original, unedited image.
+
+        exiftool -ThumbnailImage -b photo.jpg > extracted_thumbnail.jpg
+
+5. Wipe Metadata (Anti-Forensics)If you want to clear all metadata from a file before sharing it to protect your own 
+privacy:
+
+        exiftool -all= photo.jpg
