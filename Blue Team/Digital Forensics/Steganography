@@ -6,3 +6,58 @@ The secret data can be hidden inside almost any other type of digital content. T
 steganography -- called hidden text -- is often encrypted before being incorporated into the innocuous-seeming cover text
 file or data stream. If not encrypted, the hidden text is commonly processed in some method to increase the difficulty 
 of detecting the secret content.
+
+  Steganalysis tools are designed to detect anomalies in file structures, metadata, or image pixels during a 
+digital forensics investigation.
+
+1. Automated Detection and Initial Analysis
+
+binwalk
+What it does: Analyzes binary files to find embedded hidden files and executable code.
+Usage: Perfect for scenarios where an archive (ZIP, RAR) or a document was hidden inside a standard image using simple
+file appending.
+Command: binwalk -e file.png (scans and automatically extracts found assets).
+
+stegoveritas
+What it does: A comprehensive, automated multi-tool for image analysis.
+Usage: Executes dozens of tests simultaneously, checking metadata, applying graphical filters, extracting
+Least Significant Bits (LSB), and scanning the file structure for redundant data.
+
+2. Least Significant Bit (LSB) Analysis
+Steganography often hides data by slightly tweaking the color shades of individual pixels. While invisible to the human 
+eye, code can instantly spot these discrepancies.
+
+StegSolve
+What it does: A GUI-based Java tool that applies various color and bit filters to an image.
+Usage: Allows you to visually spot hidden text or QR codes by cycling through the image's Bit Planes. Unusual visual 
+noise on Red/Green/Blue Plane 0 immediately exposes steganographic tampering.
+
+zsteg
+What it does: A command-line utility optimized for detecting hidden data in the LSB of PNG and BMP files.
+Usage: Highly efficient against traditional text-hiding techniques.
+
+3. Audio and Specific Format Analysis
+
+Audacity (or Spectrogram Analyzers)
+What it does: An open-source audio editor.
+Usage: Used to switch the audio track view (e.g., WAV or MP3) into Spectrogram mode. Malicious actors frequently "draw" 
+text or images directly onto audio frequencies, which only become visible on a spectrogram.
+
+pdfid and pdf-parser
+What it does: Tools designed to analyze the internal structure of PDF documents.
+Usage: Helps identify hidden JavaScript payloads, suspicious object streams, or concealed text layers inside PDFs.
+
+4. Brute-Force Tools (For Password-Protected Payloads)
+If you have confirmed that a file contains steganography but it is encrypted, password-cracking utilities are 
+required:
+
+stegseek (or stegcracker)
+What it does: High-speed password crackers specifically designed for files created with the popular steghide utility.
+Usage: stegseek is exceptionally fast, capable of processing millions of passwords per second from wordlists 
+(like rockyou.txt) against a suspect JPEG or WAV file.
+
+Investigation Checklist (Where to Start):
+Check metadata using exiftool file.jpg (criminals occasionally leave passwords or clues in the comment fields).
+Evaluate the file size against standard resolutions. 
+If an 800x600 image takes up 20 MB, it likely hides a massive payload.
+Run the file through binwalk and zsteg as a baseline test
