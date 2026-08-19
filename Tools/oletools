@@ -1,0 +1,27 @@
+the most important utilities that live under that specific toolset umbrella:
+
+oleid (The Triager)
+Purpose: Quickly scans an Office file to see if it looks suspicious.
+What it extracts: It outputs a handy ASCII table showing whether the file contains VBA macros, embedded Flash objects,
+or file encryption.
+
+olevba (The Macro Extractor)
+Purpose: One of the most famous tools in the suite. It extracts and analyzes VBA Macro source code from MS Office files 
+in clear text.
+What it extracts: It flags dangerous keywords (like AutoOpen, Shell, or ShellExecute), automatically decodes obfuscated 
+strings (Hex, Base64), and grabs IOCs like malicious IP addresses or URLs.
+
+mraptor / MacroRaptor (The Rule Engine)
+Purpose: Uses a lightweight heuristic rule system to instantly determine if a VBA macro is malicious or safe.
+
+oleobj & rtfobj (The Object Extractors)
+Purpose: Drops and extracts embedded objects (like hidden executables, scripts, or images) bound inside standard OLE or
+RTF documents.
+
+msodde (The Dynamic Data Exchange Finder)
+Purpose: Detects and extracts DDE/DDEAUTO links from Office documents. Hackers often use DDE to execute command-line 
+payloads directly through Word without needing macros enabled.
+
+olemeta & oletimes (The Timestampers)
+Purpose: Pulls metadata properties, author info, creation time, and modification timestamps from a document. This is 
+essential for timeline tracking during cyber forensic investigations.
