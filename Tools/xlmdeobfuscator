@@ -1,1 +1,45 @@
 Для работы утилиты требуется предварительная установка (обычно через pip install xlmdeobfuscator).
+xlmdeobfuscator is an open-source, Python-based automation tool used by security analysts to deobfuscate and analyze 
+malicious Excel 4.0 macros (also known as XLM macros).xlmdeobfuscator was created as a direct response to a specific
+threat: hidden and heavily obfuscated formulas embedded inside old Excel document formats.
+
+What Problem Does This Tool Solve?
+Between 2018 and 2021, threat actors began heavily utilizing legacy Excel 4.0 (XLM) macros instead of standard VBA to
+bypass antivirus detection. Unlike VBA macros—which run inside a separate code module—XLM macros execute directly inside
+the cells of the spreadsheet itself using formulas like =EXEC(...) or =CALL(...).
+Attackers obfuscate this malicious code using several tricks:
+Scattering commands across completely hidden, locked, or out-of-sight cells.
+Encrypting strings via mathematical formulas (e.g., reconstructing a malware download URL letter-by-letter 
+using the =CHAR() function).
+Dynamically assembling the payload code only at the exact moment the file is opened by the victim.
+Standard static parsers only see a chaotic mess of random numbers and formulas. xlmdeobfuscator solves this via emulation.
+It runs an internal engine that safely "plays back" the macro execution inside an isolated memory space without ever
+opening Microsoft Excel, decrypting all hidden values on the fly to reveal the attacker's true intentions.
+
+🔎 Key Capabilities of xlmdeobfuscatorFormula Emulation: 
+It steps through mathematical cell calculations sequentially, uncovering strings hidden behind functions 
+like CHAR(), RUN(), or CONCATENATE().
+Indicator of Compromise (IOC) Extraction: The tool automatically pulls out hidden URLs, malicious IP addresses, 
+file paths, and executed PowerShell/CMD commands from the cells.
+Multi-Format Support: It works seamlessly with .xls (Excel 97-2003), .xlsm (OpenXML Macro-Enabled Spreadsheet), 
+and .xlsb (Excel Binary Format) files.
+API Integration: It can be operated natively as a command-line tool or imported as a Python library into automated
+malware analysis pipelines and email sandboxes.
+
+    Command Cheat Sheet
+1. Baseline File Analysis
+The most common command to run an automatic emulation pass and print a readable log of actions:
+
+        xlmdeobfuscator -f suspicious_invoice.xlsm
+
+2. Output Results as JSON
+If you are automating your analysis and need to feed the discovered data (URLs/commands) directly into another system 
+like a SIEM or SOAR platform:
+
+      xlmdeobfuscator -f suspicious_invoice.xlsm -j
+
+3. Limit Emulation Depth
+By default, the tool tries to emulate the entire process. If a macro utilizes an infinite loop 
+(a common anti-analysis technique to freeze tools), you can hard-cap the number of steps:
+
+      xlmdeobfuscator -f suspicious_invoice.xlsm --max-stc-steps 2000
