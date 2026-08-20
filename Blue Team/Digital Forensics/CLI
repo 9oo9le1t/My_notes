@@ -1,7 +1,7 @@
 listing the contents of the current folder----ls
 move around-----------------------------------cd
-looking for a specific file------------------------------------------------------------find (find /root/ -name "*secret*")
-extracts and prints printable character sequences---------------------------strings (strings malware_sample | grep "http")
+looking for a specific file----------------------------------------------find (find /root/ -name "*secret*")
+extracts and prints printable character sequences-------------strings (strings malware_sample | grep "http")
 utput the first part of a file----------------head
 print out the contents of a file--------------cat
 true file type--------------------------------file
