@@ -1,0 +1,52 @@
+The SOC has received an anonymous report that a user is potentially exfiltrating data from the company. 
+An image of the user’s hard drive has been taken, and you are responsible for analyzing the contents of a perfect
+copy to find any evidence of malicious activity. Using your newly developed skills, search through the folders
+and files using techniques to uncover 4 pieces of hidden information (each piece of evidence will contain the 
+string {1 of 4} or similar). You will be tested on your ability to discover this information using all of the
+techniques taught in this course; Linux CLI navigation, identifying incorrect file extensions, identifying hidden
+files/folders, steganography, and password cracking.
+
+Question 1: [Evidence 1/4] What is the name of the file where the evidence was found? (filename and extension)
+
+One-Step Triage Commands (Fast Sorting)
+
+Option 1: Instantly Find All Hidden Files (Most Efficient)
+Instead of looking for empty folders visually, tell the system to find all hidden items across all subdirectories
+simultaneously:
+      find . -type f -name ".*"
+How it works: 
+It scans from your current location (.), filters only for files (-type f), and matches names starting with a dot
+(-name ".*"). This will immediately output the exact path, such as ./Documents/to-do/.hidden_file.zip, 
+ignoring all the non-hidden noise.
+
+Option 2: Filtered Tree View
+If you still want the visual context of where the folder sits in the directory structure, make tree include 
+hidden files but use grep to filter out everything else:
+      tree -a | grep -E "\/\."
+How it works: 
+The -a flag forces tree to see hidden items. The grep pipe filters the output to only show paths containing 
+hidden folders or files (indicated by a dot). You will instantly see the hidden archive inside the to-do folder.
+
+Option 3: Find Hidden Files + Identify Real File Type (Pro Move)
+The challenge description mentions incorrect file extensions. Attackers often hide a zip file by renaming it to
+something like .system_log.txt.This powerful one-liner finds all hidden files and immediately reveals their true
+magic bytes (file signature):
+      find . -type f -name ".*" -exec file {} +
+How it works: 
+The output will look like ./to-do/.evidence.txt: Zip archive data.... Even if the extension is faked, the file 
+command uncovers that it is actually a ZIP archive 
+So you can find .a0415ns.zip
+As it is encrypted with a password I will conduct a dictionary attack against the zip file
+
+      fcrackzip -D -p /usr/share/wordlists/rockyou.txt -u .a0415ns.zip
+
+The password: vendy13031988 was found.
+Inside zip i found text document titled employeedump. The contents of this file appear to include confidential
+personal information about employees.
+now i can answer
+Question 2: [Evidence 1/4] What is the name of the directory your in where this evidence was found?
+    directory is to-do.
+Question 3: [Evidence 1/4] What piece of evidence have you found? 
+    text document titled employeedump
+
+Question 4: [Evidence 2/4] What is the name of the file where the evidence was found? (filename and extension)
