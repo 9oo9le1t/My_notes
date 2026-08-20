@@ -1,0 +1,28 @@
+Question 1: Embed the file 'secretmessage.txt' inside the cover file 'coverfile.jpg' and name the output 
+stegofile 'hiddenmessage.jpg'. What is the full command you would use to do this?
+
+Run the following command:
+    steghide embed -ef secretmessage.txt -cf coverfile.jpg -sf hiddenmessage.jpg
+
+embed -the argument we are using to embed data in a file
+  -ef -the optional flag that contains the secret message (or file you want to hide)
+  -cf -flag specifies the converted file
+  -sf -the flag which names the stegofile
+
+Question 2: Flag 1 is hidden inside a text file in one of the steganography files. What is the value?
+
+I have to sort through roughly seven files in the Stego Files folder.
+Run the following command (using the password christmastree):
+    steghide extract -sf pizza.jpg
+If I had a huge amount of files to sort through, I would have used the StegDetect tool.
+
+Question 3: Flag 2 is hidden inside a text file in one of the steganography files. What is the value?
+
+I have to sort through roughly seven files in the Stego Files folder.
+Run the following command (using the password darksky123):
+    steghide extract -sf verypretty.jpg
+
+Question 4: Flag 3 is hidden inside a text file in one of the steganography files. What is the value?
+
+Run the following command (using the password goldenwatch):
+    steghide extract -sf car.jpeg
