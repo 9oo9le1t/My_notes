@@ -1,0 +1,70 @@
+In the first example, we will compress a text file name text.txt into a password-protected ZIP file named 
+Protected.zip, with the password password123. 
+The command we will be using is 
+    zip --encrypt Protected.zip text.txt.
+
+          zip – Selects the tool we want to use
+     –encrypt – Selections the function of the tool we want to use. ‘Encrypt’ will encrypt our ZIP archive and 
+                                                                    require a password to decrypt the contents.
+Protected.zip – The name of the outputted ZIP file.
+     text.txt – The file we want to compress.
+
+    Brute-Force Attacks
+
+Sometimes investigators will encounter password-protected zipped archives or zipped malware during an 
+investigation with no reference to what the password could be.
+ZIP cracking is vital in digital forensics for accessing encrypted evidence, uncovering hidden information, 
+completing data pictures, and building strong legal cases. It allows investigators to retrieve password-protected
+files, revealing crucial evidence and supporting investigations in court.
+However, it must be conducted lawfully and ethically to ensure the integrity of the process and the admissibility
+of evidence.
+
+What are the PROS of using a brute-force attack?
+
+The obvious pro of using this method is that you will ALWAYS get the password. Because you are trying every
+possible combination, you will eventually crack the password and gain access, but this comes with a major
+downside.
+If you have information such as the length of the password, you will cut down the number of possibilities 
+dramatically. This can be applied to other attacks such as cracking account credentials – if you know the 
+password policy or requirements, you can reduce the number of possibilities significantly
+
+What are the CONS of using a brute-force attack?
+
+This attack method takes time. A lot of time. If you started with AAAAA, the next guess would be AAAAB then AAAAC.
+It’s going to take a very long time to get the right password, and each additional character is going to add a 
+lot more possibilities.
+
+Want to know how long it would take to crack your password? Enter it at https://howsecureismypassword.net
+(or enter any string you want!)
+
+For example, our target ZIP is BruteForceAttack.zip with a password of a1bc
+      crackzip -b BruteForceAttack.zip -u -c a1 -l 4
+
+           fcrackzip – Selecting the tool we want to use.
+                  -b – Selecting the option for a brute-force attack.
+BruteForceAttack.zip – The file we want to brute-force.
+                  -u – This makes sure fcrackzip actually tries to unzip the file, without this we won’t actually
+                                                                                          get the right password.
+                  -c – This is where we pick the characters we want to use in our dictionary attack. we’re using
+                                     ‘a’ which represents lowercase letters, and ‘1’ which represents numbers 0-9.
+                  -l – This is where we state the length of the password we want to crack. If we know the 
+                                                     password is between 4 and 6 characters, we would use "-l 4-6".
+
+ 
+After a few seconds, fcrackzip has identified the correct password a1b2 and we’re now able to successfully extract
+the contents of the password-protected ZIP file!
+
+To conduct a dictionary attack against a passworded ZIP file use 
+fcrackzip -D -u -p /usr/share/wordlists/rockyou.txt  DictionaryAttack.zip 
+   
+                       fcrackzip – Selecting the tool we want to use.
+                              -D – Selecting the option for a dictionary attack.
+                              -u – This makes sure fcrackzip actually tries to unzip the file
+                              -p – Use strings as password.
+/usr/share/wordlists/rockyou.txt – This is the location of our wordlist, required to perform a dictionary attack.
+            DictionaryAttack.zip – The file we want to crack.
+
+
+
+Here’s a cheat sheet with all of the potential options that can be used with fcrackzip: 
+http://manpages.ubuntu.com/manpages/trusty/man1/fcrackzip.1.html
