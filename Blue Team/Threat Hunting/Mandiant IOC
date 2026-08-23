@@ -1,0 +1,29 @@
+Mandiant IOC Editor is a “free tool that provides an interface for managing data and manipulating the logical structures
+of IOCs”. FireEye, a threat intelligence company, has provided this tool for free to the public, and it’s a great piece 
+of software to learn about creating IOCs, which are essentially XML files that can “capture diverse information about 
+threats, including attributes of malicious files, characteristics of registry changes and artifacts in memory”. 
+Mandiant IOCe is only designed for Windows OS
+
+Installation
+Download the .zip archive from FireEye’s website, extract it, and run the .msi file to install IOCe. Once it has finished,
+launch the program, and you should see the below popup. Don’t click anything just yet. We need to create a folder where
+we will export our IOC files to. Go anywhere you want, and create a folder called IOCs. In this example i’ll be placing 
+the folder in the following location 
+          Desktop > Intro 2 Threat Hunting > IOCs
+If you closed the above popup, simply go to File > Open IOC Directory within IOCe. Select your newly-created folder,
+and you’re good to go! You should see the file path at the top of the window
+
+Creating an IOC File
+Navigate to File > New > Indicator -so we can start to create our first IOC file. In IOC file you can edit the Name,
+Author, and Description fields of your IOC.The next task is to populate this entry with some values 
+Add Item > FileItem > File MD5
+Add Item > FileItem > Sha1sum
+Add Item > FileItem > File Name
+Add Item > FileItem > File Size
+This will create a new entry in our OR tree. Anything in this pane will be searched for when we use IOC files later for
+hunting. There’s a major difference between the two possible groups, OR + AND:
+
+    AND – If we have three IOCs in this tree, all three have to match a file to get a positive hit. If only 2 IOCs are 
+present, it will not notify us.
+    OR – If we have three IOCs in this tree, if any of them are present in a file, then we will get a notification later 
+when using Redline.
