@@ -1,0 +1,31 @@
+1. YARA: The File and Memory Inspector
+YARA (often described as the "Swiss Army knife for malware researchers") is used to identify and classify malware based 
+on textual or binary patterns inside static files or active system memory.
+
+Why it exists: Traditional antivirus software relies on specific file hashes (like MD5 or SHA256). If a hacker changes 
+               just a single byte of code, the hash changes completely, bypassing the antivirus. YARA solves this by 
+               looking for the characteristics of the code rather than the file hash.
+
+Where it looks: Hard drives, downloaded files, email attachments, and running RAM (volatile memory).
+
+Analogy: Think of YARA as a biometric scanner. It looks at the DNA of the file (specific strings, variables, or byte 
+         sequences) to identify it, no matter what name it uses or how it masks itself.
+
+Core Strength: Exceptional at finding specific threat actor tools, packed malware, and active exploits running in memory.
+
+2. Sigma: The Log Standardizer
+Sigma is a generic, open-source rule format used to detect malicious behavior within system and network log data.
+
+Why it exists: Every security platform (SIEM) uses its own proprietary query language. Splunk uses SPL, Elastic uses KQL,
+               Microsoft Sentinel uses KQL/ASIM. If a defender writes a rule for Splunk, it will not work in Elastic. 
+               Sigma acts as a translator. You write a rule once in the universal Sigma format (YAML), and a compiler
+               tool converts it automatically into a query for Splunk, Elastic, Sentinel, QRadar, or any other SIEM.
+
+Where it looks: Windows Event Logs, Linux Syslog, EDR telemetry (Process Creation, Registry edits), Network Firewalls, 
+                and Cloud Audit trails.
+
+Analogy: Think of Sigma as a security camera log book. It doesn't look at physical files; instead, it watches what
+         processes are doing (e.g., "Why did Command Prompt just open Notepad and then immediately delete a file?").
+
+Core Strength: Exceptional at identifying behavioral anomalies, lateral movement, credential dumping, and 
+               administrative abuse.
