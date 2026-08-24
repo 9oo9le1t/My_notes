@@ -1,0 +1,21 @@
+Brim is an open-source desktop application designed to explore, query, and search large packet captures (PCAP files) and 
+structured network logs. It bridges the gap between Wireshark and Zeek by converting raw packet captures into highly 
+structured, searchable logs via a modern user interface.
+
+Core Technology Stack
+
+Zeek Engine: Automatically parses raw PCAP data into protocol-specific, structured network telemetry logs
+(such as DNS, HTTP, TLS, and connection logs).
+Suricata Engine: Integrates signature-based threat detection to flag known malicious activity or anomalies within the
+network traffic.
+Zed Query Language (ZQL): Uses a built-in, powerful pipeline language to quickly filter, aggregate, sort, and search 
+millions of events.
+
+Key Benefits
+
+Handles Large PCAPs: Wireshark often slows down or crashes with PCAPs larger than 200MB-1GB. Brim easily processes
+multi-gigabyte files by converting them into streamlined logs first.
+Fast Threat Hunting: Security analysts can search connections or isolate specific malicious IP addresses, DNS lookups, 
+or file hashes in seconds using text search.
+Wireshark Pivot: Once you isolate a specific suspicious connection stream inside Brim's log viewer, you can click a
+button to open just that specific slice of packets directly in Wireshark for deep decoding.
