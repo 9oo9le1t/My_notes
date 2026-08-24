@@ -1,0 +1,61 @@
+Can you determine evidences of port scan activity?
+
+To solve it I will be looking for TCP Reset (RST) flags and specific ICMP error messages is the core way to identify port
+scan evidence.
+
+1. What the TCP RST (Reset) Flag Tells You
+When an attacker scans a port using a standard TCP SYN scan (stealth scan), they send a SYN packet to a port.
+How the target responds with a RST tells the attacker if the port is open or closed.
+Evidence of a Closed Port: The attacker sends SYN → Your server replies with RST, ACK.
+Why this is evidence: A healthy server immediately rejects traffic to a closed port by sending a Reset. 
+If you see thousands of RST, ACK packets leaving your server toward a single external IP, your server is screaming,
+"Stop talking to me on these closed ports!"
+Evidence of an Open Port: The attacker sends SYN → Your server replies with SYN, ACK (Open!) → The attacker immediately 
+replies with RST.
+Why this is evidence: The attacker doesn't want to establish a real connection (which logs their identity on the 
+                      application). They just want to know it's open, so they break the connection immediately using a 
+                      RST packet.
+
+2. What ICMP Packets Tell You (UDP & Firewall Scanning)
+TCP isn't the only protocol scanned. When attackers scan UDP ports or run into a Firewall, ICMP packets are generated as 
+evidence.
+UDP Port Scanning (ICMP Type 3, Code 3): UDP is connectionless, so closed ports don't send a TCP Reset. 
+Instead, if an attacker sends a UDP packet to a closed port, your operating system replies with an ICMP Destination
+Unreachable (Port Unreachable) message.
+The Evidence: A massive spike in outbound ICMP Type 3 Code 3 messages from your server to an outside IP means someone is
+              mapping your UDP ports.
+Firewall / Filtered Ports (ICMP Type 3, Code 13): If your firewall is configured to actively reject blocked traffic rather
+than silently dropping it, it will send an ICMP Communication Administratively Prohibited message back to the scanner.
+The Evidence: High volumes of ICMP Type 3 Code 13 indicate an attacker hitting a wall of filtered/protected ports.
+
+1. The TCP Filters
+To find the TCP Resets you want to filter for packets where the Reset (RST) flag is explicitly set to 1.
+     To see the target system rejecting connections (Closed Ports):
+      tcp.flags.reset == 1 && tcp.flags.ack == 1
+(This shows the target telling the scanner: "This port is closed, stop trying.")
+     To see the scanner tearing down open connections (Open Ports):
+      tcp.flags.reset == 1 && tcp.flags.ack == 0
+(This shows the scanner abruptly dropping the connection the moment it finds an open port.)
+     To see the incoming scan attempts (The SYN Flood):
+      tcp.flags.syn == 1 && tcp.flags.ack == 0
+
+2. The UDP / ICMP Filters
+Because UDP does not have flags like TCP, you must look for the ICMP error messages generated when a scanner hits a
+closed UDP port or a firewall.
+     To see UDP Port Unreachable errors (Closed UDP Ports):
+      icmp.type == 3 && icmp.code == 3
+(This is the ultimate proof of a UDP port scan. You will see a flood of these sent from your target server back to the
+attacker.)
+     To see Firewall Rejections (Filtered Ports):
+      icmp.type == 3 && icmp.code == 13
+(This shows your firewall actively blocking and turning away the scanner's packets.)
+     To catch general ICMP Network Sweeping (Ping Sweeps):
+      icmp.type == 8
+(This filters for ICMP Echo Requests, which attackers use to see if a machine is online before scanning its ports.)
+
+Pro-Tip:Combining Them
+If you want to look at both TCP Resets and UDP ICMP errors at the exact same time in your Wireshark window, you can 
+combine them using the || (OR) operator:
+      tcp.flags.reset == 1 || (icmp.type == 3 && icmp.code == 3)
+If you apply this combined filter and see the packet list instantly fill up with thousands of rows switching rapidly
+between different port numbers, you have definitive proof of an active scan.
