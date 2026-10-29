@@ -1,0 +1,23 @@
+1. scan a file to look for certain PDF keyword
+
+obj
+endobj
+stream
+endstream
+xref
+trailer
+startxref
+/Page
+/Encrypt
+/ObjStm
+/JS
+/JavaScript
+/AA
+/OpenAction
+/JBIG2Decode
+/RichMedia
+/Launch
+/XFA
+
+2. identify PDF documents with unusual/unexpected objects, 
+3. parse a PDF document to identify the fundamental elements used in the analyzed file
